@@ -55,6 +55,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                 )
                     .show()
                 Log.e(TAG, "geofencingEvent enter")
+                GeofenceTransitionsJobIntentService.enqueueWork(context, intent)
             }else if (geofencingEvent.geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
                 Toast.makeText(
                     context, "geofencingEvent exit",
