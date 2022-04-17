@@ -28,9 +28,9 @@ class AuthenticationActivity : AppCompatActivity() {
 
 //          TODO: a bonus is to customize the sign in flow to look nice using :
         //https://github.com/firebase/FirebaseUI-Android/blob/master/auth/README.md#custom-layout
-//        launchSignInFlow()
-        val intent = Intent(this, RemindersActivity::class.java)
-        startActivity(intent)
+        launchSignInFlow()
+//        val intent = Intent(this, RemindersActivity::class.java)
+//        startActivity(intent)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -41,10 +41,13 @@ class AuthenticationActivity : AppCompatActivity() {
                 // User successfully signed in
 //                val intent = Intent(this, RemindersActivity::class.java)
 //                startActivity(intent)
+                val intent = Intent(this, RemindersActivity::class.java)
+                startActivity(intent)
+                finish()
                 Log.i("AuthenticationActivity", "Successfully signed in user ${FirebaseAuth.getInstance().currentUser?.displayName}!")
             } else {
-                // Sign in failed. If response is null the user canceled the
                 // sign-in flow using the back button. Otherwise check
+                // Sign in failed. If response is null the user canceled the
                 // response.getError().getErrorCode() and handle the error.
                 Log.i("AuthenticationActivity", "Sign in unsuccessful ${response?.error?.errorCode}")
             }
