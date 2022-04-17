@@ -69,10 +69,7 @@ class SelectLocationFragment : BaseFragment() {
 //        TODO: call this function after the user confirms on the selected location
 
         binding.btnConfirm.setOnClickListener {
-            _viewModel.latitude.value = selectedLocation?.latitude
-            _viewModel.longitude.value = selectedLocation?.longitude
-            _viewModel.navigationCommand.value =
-                NavigationCommand.Back
+            onLocationSelected()
         }
 
         return binding.root
@@ -93,10 +90,15 @@ class SelectLocationFragment : BaseFragment() {
         //        TODO: When the user confirms on the selected location,
         //         send back the selected location details to the view model
         //         and navigate back to the previous fragment to save the reminder and add the geofence
-        val reminderData = ReminderDataItem("selected location", "description",
-            "Location", selectedLocation?.latitude, selectedLocation?.longitude)
+        val title = _viewModel.reminderTitle.value
+        val description = _viewModel.reminderDescription.value
+        val location = _viewModel.reminderSelectedLocationStr.value
+        val latitude = selectedLocation?.latitude
+        val longitude = selectedLocation?.longitude
 
-        //_viewModel.validateAndSaveReminder(reminderData)
+        var reminderData = ReminderDataItem(title,description,location,latitude, longitude)
+
+        _viewModel.validateAndSaveReminder(reminderData)
     }
 
 
@@ -105,7 +107,6 @@ class SelectLocationFragment : BaseFragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        // TODO: Change the map type based on the user's selection.
         R.id.normal_map -> {
             map?.mapType = GoogleMap.MAP_TYPE_NORMAL
             true
@@ -136,9 +137,6 @@ class SelectLocationFragment : BaseFragment() {
          * user has installed Google Play services and returned to the app.
          */
         this.map = googleMap
-//        val sydney = LatLng(-34.0, 151.0)
-//        this.map?.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-//        this.map?.moveCamera(CameraUpdateFactory.newLatLng(sydney))
 
         getLocationPermission()
         getDeviceLocation()
@@ -244,6 +242,7 @@ class SelectLocationFragment : BaseFragment() {
                     grantResults[0] == PackageManager.PERMISSION_GRANTED
                 ) {
                     locationPermissionGranted = true
+                    getDeviceLocation()
                 }
             }
             else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
