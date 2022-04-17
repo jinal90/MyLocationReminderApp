@@ -92,10 +92,6 @@ class SaveReminderFragment : BaseFragment() {
 
         binding.saveReminder.setOnClickListener {
             requestForegroundAndBackgroundLocationPermissions()
-
-//            TODO: use the user entered reminder details to:
-//             1) add a geofencing request
-//             2) save the reminder to the local db
         }
     }
 
@@ -244,10 +240,13 @@ class SaveReminderFragment : BaseFragment() {
                 )
                     .show()
                 Log.e("Add Geofence", geofence.requestId)
+                _viewModel.navigationCommand.value =
+                    NavigationCommand.Back
             }
             addOnFailureListener {
                 Toast.makeText(
                     requireContext(), R.string.geofences_not_added,
+
                     Toast.LENGTH_SHORT
                 ).show()
                 if ((it.message != null)) {
