@@ -96,7 +96,7 @@ class SelectLocationFragment : BaseFragment() {
         val reminderData = ReminderDataItem("selected location", "description",
             "Location", selectedLocation?.latitude, selectedLocation?.longitude)
 
-        _viewModel.validateAndSaveReminder(reminderData)
+        //_viewModel.validateAndSaveReminder(reminderData)
     }
 
 
@@ -206,6 +206,13 @@ class SelectLocationFragment : BaseFragment() {
                                     currentLocation, DEFAULT_ZOOM.toFloat()
                                 )
                             )
+                            val geoCoder = Geocoder(activity, Locale.getDefault())
+                            val lat: Double = lastKnownLocation?.latitude ?: 0.0
+                            val lng: Double = lastKnownLocation?.longitude ?: 0.0
+                            val address = geoCoder.getFromLocation(lat, lng, 1)
+                            val title = "${address[0].thoroughfare}, ${address[0].locality}, ${address[0].countryName}"
+                            _viewModel.reminderSelectedLocationStr.value = title
+                            selectedLocation = LatLng(lat,lng)
                         }
                     } else {
                         Log.d(TAG, "Current location is null. Using defaults.")

@@ -20,6 +20,7 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
     val selectedPOI = MutableLiveData<PointOfInterest>()
     val latitude = MutableLiveData<Double>()
     val longitude = MutableLiveData<Double>()
+    val reminderDataItem = MutableLiveData<ReminderDataItem>()
 
     /**
      * Clear the live data objects to start fresh next time the view model gets called
@@ -31,15 +32,24 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
         selectedPOI.value = null
         latitude.value = null
         longitude.value = null
+        reminderDataItem.value = null
     }
 
     /**
      * Validate the entered data then saves the reminder data to the DataSource
      */
-    fun validateAndSaveReminder(reminderData: ReminderDataItem) {
+    fun validateAndSaveReminder() {
+        val title = reminderTitle.value
+        val description = reminderDescription.value
+        val location = reminderSelectedLocationStr.value
+        val latitude = latitude.value
+        val longitude = longitude.value
+
+        var reminderData = ReminderDataItem(title,description,location,latitude, longitude)
         if (validateEnteredData(reminderData)) {
             saveReminder(reminderData)
         }
+        reminderDataItem.value = reminderData
     }
 
     /**

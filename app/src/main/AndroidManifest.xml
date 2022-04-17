@@ -43,7 +43,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".locationreminders.RemindersActivity"></activity>
+        <activity android:name=".locationreminders.RemindersActivity" />
 
         <receiver
             android:name=".locationreminders.geofence.GeofenceBroadcastReceiver"
