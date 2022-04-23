@@ -3,6 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Jinal/Workspace/MyLocationReminderApp/app/src/main/res/drawable/ic_add.xml" value="0.1125" />
+        <entry key="..\:/Jinal/Workspace/MyLocationReminderApp/app/src/main/res/drawable/ic_location.xml" value="0.1125" />
+        <entry key="..\:/Jinal/Workspace/MyLocationReminderApp/app/src/main/res/drawable/ic_no_data.xml" value="0.1125" />
+        <entry key="..\:/Jinal/Workspace/MyLocationReminderApp/app/src/main/res/drawable/ic_save.xml" value="0.1125" />
+        <entry key="..\:/Jinal/Workspace/MyLocationReminderApp/app/src/main/res/layout/activity_authentication.xml" value="0.10104166666666667" />
         <entry key="..\:/Jinal/Workspace/MyLocationReminderApp/app/src/main/res/layout/activity_reminder_description.xml" value="0.10104166666666667" />
         <entry key="..\:/Jinal/Workspace/MyLocationReminderApp/app/src/main/res/layout/fragment_maps.xml" value="0.1" />
         <entry key="..\:/Jinal/Workspace/MyLocationReminderApp/app/src/main/res/layout/fragment_save_reminder.xml" value="0.2421875" />

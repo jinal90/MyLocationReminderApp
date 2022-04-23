@@ -1,6 +1,8 @@
 package com.udacity.project4.authentication
 
 import android.app.Activity
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -41,7 +43,20 @@ class AuthenticationActivity : AppCompatActivity() {
                 // sign-in flow using the back button. Otherwise check
                 // Sign in failed. If response is null the user canceled the
                 // response.getError().getErrorCode() and handle the error.
-                    //todo handle login failure
+                val builder: AlertDialog.Builder = this.let {
+                    AlertDialog.Builder(it)
+                }
+                .setMessage("Do you want to quit the app?")
+                .setTitle("Error")
+                .setPositiveButton("Yes") { _, _ ->
+                    finish()
+                }
+                .setNegativeButton("No") { _, _ ->
+                    launchSignInFlow()
+                }
+                val dialog: AlertDialog? = builder?.create()
+                dialog?.show()
+
                 Log.i("AuthenticationActivity", "Sign in unsuccessful ${response?.error?.errorCode}")
             }
         }
