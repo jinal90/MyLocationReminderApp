@@ -40,4 +40,10 @@
     <string name="geofence_too_many_geofences">Your app has registered too many geofences.</string>
     <string name="geofence_too_many_pending_intents">You have provided too many PendingIntents to the addGeofences() call.</string>
     <string name="error_adding_geofence">Error Happened, Can\'t Add Geofence</string>
+
+    <string name="button_yes">Yes</string>
+    <string name="button_no">No</string>
+    <string name="button_ok">OK</string>
+
+    <string name="select_poi_message">Tap on map to drop a pin on your desired location to set a reminder. Then select Confirm.</string>
 </resources>

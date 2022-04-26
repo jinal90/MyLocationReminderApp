@@ -31,12 +31,12 @@ import org.koin.android.ext.android.inject
 import java.util.concurrent.TimeUnit
 
 
-private const val REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE = 33
-private const val REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE = 34
-private const val REQUEST_TURN_DEVICE_LOCATION_ON = 29
+const val REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE = 33
+const val REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE = 34
+const val REQUEST_TURN_DEVICE_LOCATION_ON = 29
 private const val TAG = "SaveReminderFragment"
-private const val LOCATION_PERMISSION_INDEX = 0
-private const val BACKGROUND_LOCATION_PERMISSION_INDEX = 1
+const val LOCATION_PERMISSION_INDEX = 0
+const val BACKGROUND_LOCATION_PERMISSION_INDEX = 1
 
 class SaveReminderFragment : BaseFragment() {
     //Get the view model this time as a single to be shared with the another fragment
@@ -95,7 +95,7 @@ class SaveReminderFragment : BaseFragment() {
         }
     }
 
-    @TargetApi(29)
+
     private fun foregroundAndBackgroundLocationPermissionApproved(): Boolean {
         val foregroundLocationApproved = (
                 PackageManager.PERMISSION_GRANTED ==
@@ -121,7 +121,7 @@ class SaveReminderFragment : BaseFragment() {
         _viewModel.onClear()
     }
 
-    @TargetApi(29)
+
     private fun requestForegroundAndBackgroundLocationPermissions() {
         if (foregroundAndBackgroundLocationPermissionApproved()) {
             checkDeviceLocationSettingsAndStartGeofence()
@@ -135,10 +135,7 @@ class SaveReminderFragment : BaseFragment() {
             else -> REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
         }
         Log.d(TAG, "Request foreground only location permission")
-        ActivityCompat.requestPermissions(
-            requireActivity(),
-            permissionsArray,
-            resultCode
+        requestPermissions(permissionsArray, resultCode
         )
     }
 
