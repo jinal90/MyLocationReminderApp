@@ -126,18 +126,19 @@ class SaveReminderFragment : BaseFragment() {
     private fun requestForegroundAndBackgroundLocationPermissions() {
         if (foregroundAndBackgroundLocationPermissionApproved()) {
             checkDeviceLocationSettingsAndStartGeofence()
-        }
-        var permissionsArray = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
-        val resultCode = when {
-            runningQOrLater -> {
-                permissionsArray += Manifest.permission.ACCESS_BACKGROUND_LOCATION
-                REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE
+        }else{
+            var permissionsArray = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
+            val resultCode = when {
+                runningQOrLater -> {
+                    permissionsArray += Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                    REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE
+                }
+                else -> REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
             }
-            else -> REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
+            Log.d(TAG, "Request foreground only location permission")
+            requestPermissions(permissionsArray, resultCode
+            )
         }
-        Log.d(TAG, "Request foreground only location permission")
-        requestPermissions(permissionsArray, resultCode
-        )
     }
 
     override fun onRequestPermissionsResult(
@@ -218,9 +219,17 @@ class SaveReminderFragment : BaseFragment() {
         val lat: Double = _viewModel.latitude.value ?: 0.0
         val lng: Double = _viewModel.longitude.value ?: 0.0
 
+        val title = _viewModel.reminderTitle.value
+        val description = _viewModel.reminderDescription.value
+        val location = _viewModel.reminderSelectedLocationStr.value
+        val latitude = _viewModel.latitude.value
+        val longitude = _viewModel.longitude.value
+
+        val reminderData = ReminderDataItem(title, description, location, latitude, longitude)
+
         val geofence = Geofence.Builder()
-            .setRequestId(_viewModel.reminderDataItem.value?.id)
-            .setCircularRegion(lat, lng, 10f)
+            .setRequestId(reminderData.id)
+            .setCircularRegion(lat, lng, 100f)
             .setExpirationDuration(GEOFENCE_EXPIRATION_IN_MILLISECONDS)
             .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
             .build()
@@ -229,14 +238,6 @@ class SaveReminderFragment : BaseFragment() {
             .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
             .addGeofence(geofence)
             .build()
-
-        val title = _viewModel.reminderTitle.value
-        val description = _viewModel.reminderDescription.value
-        val location = _viewModel.reminderSelectedLocationStr.value
-        val latitude = _viewModel.latitude.value
-        val longitude = _viewModel.longitude.value
-
-        var reminderData = ReminderDataItem(title, description, location, latitude, longitude)
 
         _viewModel.validateAndSaveReminder(reminderData)
         geofencingClient.addGeofences(geofencingRequest, geofencePendingIntent)?.run {
@@ -261,6 +262,7 @@ class SaveReminderFragment : BaseFragment() {
                 }
             }
         }
+
     }
 
     companion object {

@@ -25,6 +25,7 @@ import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
+import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.databinding.FragmentSelectLocationBinding
 import com.udacity.project4.locationreminders.savereminder.*
 import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
@@ -87,6 +88,7 @@ class SelectLocationFragment : BaseFragment() {
         _viewModel.reminderSelectedLocationStr.value = selectedLocationName
         _viewModel.latitude.value = selectedLocation?.latitude
         _viewModel.longitude.value = selectedLocation?.longitude
+        _viewModel.navigationCommand.value = NavigationCommand.Back
     }
 
 
@@ -166,20 +168,21 @@ class SelectLocationFragment : BaseFragment() {
         if (foregroundAndBackgroundLocationPermissionApproved()) {
             locationPermissionGranted = true
             getDeviceLocation()
-        }
-        var permissionsArray = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
-        val resultCode = when {
-            runningQOrLater -> {
-                permissionsArray += Manifest.permission.ACCESS_BACKGROUND_LOCATION
-                REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE
+        } else{
+            var permissionsArray = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
+            val resultCode = when {
+                runningQOrLater -> {
+                    permissionsArray += Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                    REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE
+                }
+                else -> REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
             }
-            else -> REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
+            Log.d(TAG, "Request foreground only location permission")
+            requestPermissions(
+                permissionsArray,
+                resultCode
+            )
         }
-        Log.d(TAG, "Request foreground only location permission")
-        requestPermissions(
-            permissionsArray,
-            resultCode
-        )
     }
 
     private fun foregroundAndBackgroundLocationPermissionApproved(): Boolean {
@@ -224,6 +227,7 @@ class SelectLocationFragment : BaseFragment() {
                                     currentLocation, DEFAULT_ZOOM.toFloat()
                                 )
                             )
+                            map?.uiSettings?.isMyLocationButtonEnabled = true
                             showSelectPoiPopup()
                         }
                     } else {
