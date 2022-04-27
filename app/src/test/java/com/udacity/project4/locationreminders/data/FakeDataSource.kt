@@ -6,9 +6,15 @@ import com.udacity.project4.locationreminders.data.dto.Result
 class FakeDataSource : ReminderDataSource {
 
     private var reminderList: MutableList<ReminderDTO> = mutableListOf()
+    var errorScenario: Boolean = false
 
     override suspend fun getReminders(): Result<List<ReminderDTO>> {
-        return Result.Success(reminderList)
+        if(!errorScenario)
+        {
+            return Result.Success(reminderList)
+        }
+        return Result.Error("Error loading reminders.")
+
     }
 
     override suspend fun saveReminder(reminder: ReminderDTO) {
@@ -16,9 +22,12 @@ class FakeDataSource : ReminderDataSource {
     }
 
     override suspend fun getReminder(id: String): Result<ReminderDTO> {
-        for (reminder in reminderList) {
-            if (reminder.id == id) {
-                return Result.Success(reminder)
+        if(!errorScenario)
+        {
+            for (reminder in reminderList) {
+                if (reminder.id == id) {
+                    return Result.Success(reminder)
+                }
             }
         }
         return Result.Error("Reminder not found")

@@ -34,7 +34,6 @@ class SaveReminderViewModelTest {
     private lateinit var viewModel: SaveReminderViewModel
     private lateinit var mockApp: Application
 
-    //TODO: provide testing to the SaveReminderView and its live data objects
     @Before
     fun setup() {
         stopKoin()
