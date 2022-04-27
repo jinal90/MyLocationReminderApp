@@ -62,11 +62,11 @@ class RemindersActivityTest :
         register(dataBindingIdlingResource)
     }
 
+
     @After
     fun unregisterIdlingResource(): Unit = IdlingRegistry.getInstance().run {
         unregister(dataBindingIdlingResource)
     }
-
 
     /**
      * As we use Koin as a Service Locator Library to develop our code, we'll also use Koin to test our code.
@@ -122,7 +122,6 @@ class RemindersActivityTest :
         onView(withId(R.id.map)).perform(click())
         onView(withId(R.id.btnConfirm)).perform(click())
         onView(withId(R.id.saveReminder)).perform(click())
-        scenario.onActivity { }
 
         onView(withText(R.string.reminder_saved)).inRoot(
             withDecorView(
