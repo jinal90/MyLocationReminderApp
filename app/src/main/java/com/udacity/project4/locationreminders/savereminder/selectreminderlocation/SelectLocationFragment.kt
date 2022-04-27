@@ -26,7 +26,6 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.databinding.FragmentSelectLocationBinding
-import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
 import com.udacity.project4.locationreminders.savereminder.*
 import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
 import org.koin.android.ext.android.inject
@@ -50,6 +49,7 @@ class SelectLocationFragment : BaseFragment() {
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private var lastKnownLocation: Location? = null
     private var selectedLocation: LatLng? = null
+    private var selectedLocationName: String? = null
     private val runningQOrLater = android.os.Build.VERSION.SDK_INT >=
             android.os.Build.VERSION_CODES.Q
 
@@ -84,15 +84,9 @@ class SelectLocationFragment : BaseFragment() {
     }
 
     private fun onLocationSelected() {
-        val title = _viewModel.reminderTitle.value
-        val description = _viewModel.reminderDescription.value
-        val location = _viewModel.reminderSelectedLocationStr.value
-        val latitude = selectedLocation?.latitude
-        val longitude = selectedLocation?.longitude
-
-        var reminderData = ReminderDataItem(title, description, location, latitude, longitude)
-
-        _viewModel.validateAndSaveReminder(reminderData)
+        _viewModel.reminderSelectedLocationStr.value = selectedLocationName
+        _viewModel.latitude.value = selectedLocation?.latitude
+        _viewModel.longitude.value = selectedLocation?.longitude
     }
 
 
@@ -160,7 +154,7 @@ class SelectLocationFragment : BaseFragment() {
         val geoCoder = Geocoder(activity, Locale.getDefault())
         val address = geoCoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
         val title = "${address[0].thoroughfare}, ${address[0].locality}, ${address[0].countryName}"
-        _viewModel.reminderSelectedLocationStr.value = title
+        selectedLocationName = title
         val marker = MarkerOptions()
             .position(latLng)
             .title(title)
