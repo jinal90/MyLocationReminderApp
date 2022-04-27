@@ -1,16 +1,20 @@
 package com.udacity.project4
 
+
 import android.app.Application
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import androidx.test.rule.ActivityTestRule
 import com.udacity.project4.base.DataBindingViewHolder
 import com.udacity.project4.locationreminders.RemindersActivity
 import com.udacity.project4.locationreminders.data.ReminderDataSource
@@ -23,9 +27,11 @@ import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
 import com.udacity.project4.util.DataBindingIdlingResource
 import com.udacity.project4.util.monitorActivity
 import kotlinx.coroutines.runBlocking
+import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.not
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -45,6 +51,10 @@ class RemindersActivityTest :
     private lateinit var repository: ReminderDataSource
     private lateinit var appContext: Application
 
+    @get:Rule
+    var mActivityRule: ActivityTestRule<RemindersActivity?> = ActivityTestRule(
+        RemindersActivity::class.java
+    )
     private val dataBindingIdlingResource = DataBindingIdlingResource()
 
     @Before
@@ -96,7 +106,7 @@ class RemindersActivityTest :
     }
 
     @Test
-    fun test_firstLaunch_shouldShowEmptyReminderList() {
+    fun test_saveReminderFlow() {
 
         val scenario = ActivityScenario.launch(RemindersActivity::class.java)
         dataBindingIdlingResource.monitorActivity(scenario)
@@ -104,9 +114,56 @@ class RemindersActivityTest :
         onView(withText("Location Reminders")).check(matches(isDisplayed()))
         onView(withText("No Data")).check(matches(isDisplayed()))
         onView(withId(R.id.addReminderFAB)).perform(click())
-        onView(withId(R.id.reminderTitle)).check(matches((isDisplayed())))
-        onView(withId(R.id.reminderDescription)).check(matches((isDisplayed())))
+        onView(withId(R.id.reminderTitle)).perform(replaceText("Test Title"))
+        onView(withId(R.id.reminderDescription)).perform(replaceText("Test Description"))
         onView(withText("Reminder Location")).check(matches((isDisplayed())))
+            .perform(click())
+        onView(withText("OK")).perform(click())
+        onView(withId(R.id.map)).perform(click())
+        onView(withId(R.id.btnConfirm)).perform(click())
+        onView(withId(R.id.saveReminder)).perform(click())
+        scenario.onActivity { }
+
+        onView(withText(R.string.reminder_saved)).inRoot(
+            withDecorView(
+                not(
+                    `is`(
+                        mActivityRule.activity?.window?.decorView
+                    )
+                )
+            )
+        ).check(
+            matches(
+                isDisplayed()
+            )
+        )
+
+        onView(withText("Test Title")).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun test_titleAndDescriptionEmptyToast() {
+
+        val scenario = ActivityScenario.launch(RemindersActivity::class.java)
+        dataBindingIdlingResource.monitorActivity(scenario)
+
+        onView(withId(R.id.addReminderFAB)).perform(click())
+        onView(withText("Reminder Location")).check(matches((isDisplayed())))
+            .perform(click())
+
+        onView(withText(R.string.enter_title_description_message)).inRoot(
+            withDecorView(
+                not(
+                    `is`(
+                        mActivityRule.activity?.window?.decorView
+                    )
+                )
+            )
+        ).check(
+            matches(
+                isDisplayed()
+            )
+        )
     }
 
     @Test

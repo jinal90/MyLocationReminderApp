@@ -45,5 +45,7 @@
     <string name="button_no">No</string>
     <string name="button_ok">OK</string>
 
+    <string name="enter_title_description_message">Kindly add title and Description</string>
+
     <string name="select_poi_message">Tap on map to drop a pin on your desired location to set a reminder. Then select Confirm.</string>
 </resources>

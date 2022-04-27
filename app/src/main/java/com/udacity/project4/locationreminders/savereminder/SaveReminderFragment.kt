@@ -84,7 +84,7 @@ class SaveReminderFragment : BaseFragment() {
                     NavigationCommand.To(SaveReminderFragmentDirections.actionSaveReminderFragmentToSelectLocationFragment())
             } else {
                 Toast.makeText(
-                    requireContext(), "Kindly add title and Description",
+                    requireContext(), getString(R.string.enter_title_description_message),
                     Toast.LENGTH_SHORT
                 )
                     .show()
