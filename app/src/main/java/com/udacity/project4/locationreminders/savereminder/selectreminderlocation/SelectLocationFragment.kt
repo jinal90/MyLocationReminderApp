@@ -227,6 +227,7 @@ class SelectLocationFragment : BaseFragment() {
                                     currentLocation, DEFAULT_ZOOM.toFloat()
                                 )
                             )
+                            map?.isMyLocationEnabled = true
                             map?.uiSettings?.isMyLocationButtonEnabled = true
                             showSelectPoiPopup()
                         }
