@@ -14,7 +14,7 @@ import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import androidx.test.rule.ActivityTestRule
+import com.google.android.material.internal.ContextUtils.getActivity
 import com.udacity.project4.base.DataBindingViewHolder
 import com.udacity.project4.locationreminders.RemindersActivity
 import com.udacity.project4.locationreminders.data.ReminderDataSource
@@ -31,7 +31,6 @@ import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.not
 import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -51,17 +50,12 @@ class RemindersActivityTest :
     private lateinit var repository: ReminderDataSource
     private lateinit var appContext: Application
 
-    @get:Rule
-    var mActivityRule: ActivityTestRule<RemindersActivity?> = ActivityTestRule(
-        RemindersActivity::class.java
-    )
     private val dataBindingIdlingResource = DataBindingIdlingResource()
 
     @Before
     fun registerIdlingResource(): Unit = IdlingRegistry.getInstance().run {
         register(dataBindingIdlingResource)
     }
-
 
     @After
     fun unregisterIdlingResource(): Unit = IdlingRegistry.getInstance().run {
@@ -127,7 +121,7 @@ class RemindersActivityTest :
             withDecorView(
                 not(
                     `is`(
-                        mActivityRule.activity?.window?.decorView
+                        getActivity(appContext)?.window?.decorView
                     )
                 )
             )
@@ -154,7 +148,7 @@ class RemindersActivityTest :
             withDecorView(
                 not(
                     `is`(
-                        mActivityRule.activity?.window?.decorView
+                        getActivity(appContext)?.window?.decorView
                     )
                 )
             )

@@ -4,6 +4,8 @@ import android.app.Application
 import android.os.Bundle
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.fragment.app.testing.launchFragmentInContainer
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
@@ -33,6 +35,8 @@ import org.koin.core.context.GlobalContext.get
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.dsl.module
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
 
 @RunWith(AndroidJUnit4::class)
 @ExperimentalCoroutinesApi
@@ -99,22 +103,25 @@ class ReminderListFragmentTest {
         dataBindingIdlingResource.monitorFragment(scenario)
 
         onView(withText("No Data")).check(matches(isDisplayed()))
-        onView(withId(R.id.addReminderFAB)).perform(click())
-        onView(withId(R.id.reminderTitle)).check(matches((isDisplayed())))
-        onView(withId(R.id.reminderDescription)).check(matches((isDisplayed())))
-        onView(withText("Reminder Location")).check(matches((isDisplayed())))
     }
 
     @Test
     fun test_addReminderFabClick_navigatesToAddReminderScreen() {
 
+        val navController = mock(NavController::class.java)
+
         val scenario = launchFragmentInContainer<ReminderListFragment>(Bundle(), R.style.AppTheme)
         dataBindingIdlingResource.monitorFragment(scenario)
 
+        scenario.onFragment {
+            Navigation.setViewNavController(it.view!!, navController)
+        }
+
         onView(withId(R.id.addReminderFAB)).perform(click())
-        onView(withId(R.id.reminderTitle)).check(matches((isDisplayed())))
-        onView(withId(R.id.reminderDescription)).check(matches((isDisplayed())))
-        onView(withText("Reminder Location")).check(matches((isDisplayed())))
+
+        verify(navController).navigate(
+            ReminderListFragmentDirections.toSaveReminder()
+        )
     }
 
     @Test
@@ -153,5 +160,4 @@ class ReminderListFragmentTest {
         onView(withText("Description2")).check(matches(isDisplayed()))
         onView(withText("Location2")).check(matches(isDisplayed()))
     }
-
 }
